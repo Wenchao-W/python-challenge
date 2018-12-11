@@ -15,6 +15,7 @@ csvpath = os.path.join("budget_data.csv")
 # Define initial values for further calculation
 month=0
 totalnet=0
+Last=0
 MaxP=0
 MaxL=0
 # Open the CSV
@@ -30,20 +31,22 @@ with open(csvpath, newline="", encoding="utf8") as csvfile:
         month+=1
         # Calculate the total profit/loss
         totalnet+=float(row[1])
+        # Calculate the monthly difference
+        DiffMonthly=float(row[1])-Last
         # Find the max profit and record the date                
-        if float(row[1])>MaxP:
-            MaxP=float(row[1])
+        if DiffMonthly>MaxP:
+            MaxP=DiffMonthly
             MaxPDate=row[0]
         # Find the max loss and record the date     
-        if float(row[1])<MaxL:
-            MaxL=float(row[1])
+        if DiffMonthly<MaxL:
+            MaxL=DiffMonthly
             MaxLDate=row[0]
 # Get the last month's "Profit/Losses"
-        End=float(row[1])
+        Last=float(row[1])
 # Get the first month's "Profit/Losses" 
-Start = float(csvreader[0][1])
-# Calculate the "Profit/Losses" between months
-AvgPL=(End-Start)/(month-1)
+Begin = float(csvreader[0][1])
+# Calculate the Average "Profit/Losses" between months
+AvgPL=(Last-Begin)/(month-1)
 
 # Print the output in the terminal
 output=f"Financial Analysis\n----------------------------\nTotal Months: {month}\nTotal: ${totalnet}\nAverage  Change: ${AvgPL:.2f}\nGreatest Increase in Profits: {MaxPDate} (${MaxP})\nGreatest Decrease in Profits: {MaxLDate} (${MaxL})"
