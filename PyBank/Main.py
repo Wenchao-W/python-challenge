@@ -35,11 +35,11 @@ with open(csvpath, newline="", encoding="utf8") as csvfile:
         DiffMonthly=float(row[1])-Last
         # Find the max profit and record the date                
         if DiffMonthly>MaxP:
-            MaxP=DiffMonthly
+            MaxP=int(DiffMonthly)
             MaxPDate=row[0]
         # Find the max loss and record the date     
         if DiffMonthly<MaxL:
-            MaxL=DiffMonthly
+            MaxL=int(DiffMonthly)
             MaxLDate=row[0]
 # Get the last month's "Profit/Losses"
         Last=float(row[1])
