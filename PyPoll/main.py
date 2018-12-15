@@ -17,7 +17,7 @@ TolVote=0
 KhanVote=0
 CorreyVote=0
 LiVote=0
-
+OVote=0
 # Open the CSV 
 with open(csvpath, newline="", encoding="utf8") as csvfile:
     csvreader = csv.DictReader(csvfile, delimiter=",")
@@ -32,21 +32,25 @@ with open(csvpath, newline="", encoding="utf8") as csvfile:
             CorreyVote+=1
         if row['Candidate']=="Li":
             LiVote+=1
+        if row['Candidate']=="O'Tooley":
+            OVote+=1
 # Cal the percentage of each cadidate    
 KPercent="{0:.3%}".format(KhanVote/TolVote)
 CPercent="{0:.3%}".format(CorreyVote/TolVote)
 LPercent="{0:.3%}".format(LiVote/TolVote)
-
+OPercent="{0:.3%}".format(OVote/TolVote)
 # Find who is the winner
-if KhanVote>CorreyVote and KhanVote>LiVote:
-    Winner="Khan"
-elif CorreyVote>LiVote:
+if CorreyVote>LiVote and CorreyVote>KhanVote and CorreyVote>OVote:
     Winner="Correy"
-else:
+elif KhanVote>LiVote and KhanVote>OVote:
+    Winner="Khan"
+elif LiVote>OVote:
     Winner="Li"
+else:
+    Winner="O'Tooley"
 
 # Print the data in terminal
-output=f"Election Results\n----------------------------\nTotal Votes: {TolVote}\n----------------------------\nKhan:{KPercent} ({KhanVote})\nCorrey:{CPercent} ({CorreyVote})\nLi:{LPercent} ({LiVote})\n----------------------------\nWinner is {Winner}\n"
+output=f"Election Results\n----------------------------\nTotal Votes: {TolVote}\n----------------------------\nKhan:{KPercent} ({KhanVote})\nCorrey:{CPercent} ({CorreyVote})\nLi:{LPercent} ({LiVote})\nO'Tooley:{OPercent} ({OVote})\n----------------------------\nWinner is {Winner}\n"
 print(output)
 
 # Write the text file in the same folder of the output
