@@ -14,43 +14,39 @@ csvpath = os.path.join("election_data.csv")
 
 # Provide the initial value for cal
 TolVote=0
-KhanVote=0
-CorreyVote=0
-LiVote=0
-OVote=0
-# Open the CSV 
-with open(csvpath, newline="", encoding="utf8") as csvfile:
-    csvreader = csv.DictReader(csvfile, delimiter=",")
-    # Loop 
-    for row in csvreader:
-        # Cal the total votes
-        TolVote+=1
-        # Cal the votes for each candidates                 
-        if row['Candidate']=="Khan":
-            KhanVote+=1
-        if row['Candidate']=="Correy":
-            CorreyVote+=1
-        if row['Candidate']=="Li":
-            LiVote+=1
-        if row['Candidate']=="O'Tooley":
-            OVote+=1
-# Cal the percentage of each cadidate    
-KPercent="{0:.3%}".format(KhanVote/TolVote)
-CPercent="{0:.3%}".format(CorreyVote/TolVote)
-LPercent="{0:.3%}".format(LiVote/TolVote)
-OPercent="{0:.3%}".format(OVote/TolVote)
-# Find who is the winner
-if CorreyVote>LiVote and CorreyVote>KhanVote and CorreyVote>OVote:
-    Winner="Correy"
-elif KhanVote>LiVote and KhanVote>OVote:
-    Winner="Khan"
-elif LiVote>OVote:
-    Winner="Li"
-else:
-    Winner="O'Tooley"
+candidate_name=[]
+votedetails=''
 
-# Print the data in terminal
-output=f"Election Results\n----------------------------\nTotal Votes: {TolVote}\n----------------------------\nKhan:{KPercent} ({KhanVote})\nCorrey:{CPercent} ({CorreyVote})\nLi:{LPercent} ({LiVote})\nO'Tooley:{OPercent} ({OVote})\n----------------------------\nWinner is {Winner}\n"
+# Open the CSV and convert it to a two level list 
+with open(csvpath, newline="", encoding="utf8") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+    next(csvreader)
+    data=list(csvreader)
+
+for i in data:
+    # Cal the total votes
+    TolVote+=1
+    # Find all the candidates                 
+    if i[2] not in candidate_name:
+        candidate_name.append(i[2])
+# Find number of candidate
+candidate_number=len(candidate_name)
+# Give each candidate an initial zero votes and percentage
+candidate_vote=[0]*candidate_number
+VotePercent=[0]*candidate_number
+# Calculate the votes of each candidate
+for i in data:
+    for j in range(candidate_number):
+        if i[2]==candidate_name[j]:
+            candidate_vote[j]+=1
+# Calculate the percentage of vote for each candidate and record the voting details
+for i in range(candidate_number):
+    VotePercent[i]="{0:.3%}".format(candidate_vote[i]/TolVote)
+    votedetails+=(f'{candidate_name[i]}: {VotePercent[i]} ({candidate_vote[i]})\n')
+# Find the winner of the election
+winner=candidate_name[candidate_vote.index(max(candidate_vote))]
+# Write the election results into an output and print it    
+output=f'Election Results\n----------------------------\nTotal Votes: {TolVote}\n----------------------------\n{votedetails}----------------------------\nWinner is {winner}'
 print(output)
 
 # Write the text file in the same folder of the output
